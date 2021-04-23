@@ -7,6 +7,14 @@ from django.db import models
 class Budget(models.Model):
     name = models.CharField(max_length=255)
 
+    def total(self) -> Decimal:
+        """
+        return sum of associated entries
+        """
+        entries = self.budget_entries.all()
+        return sum([entry.amount for entry in entries])
+
+
     def __str__(self):
         return self.name
 
