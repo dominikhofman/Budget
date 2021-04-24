@@ -11,16 +11,21 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     
     services:
           postgres:
             image: postgres:13.2
-            env:
-              POSTGRES_USER: postgres
-              POSTGRES_PASSWORD: postgres
-              POSTGRES_DB: postgres
             ports:
               - 5432:5432
+            env:
+              POSTGRES_USER: $POSTGRES_USER
+              POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+              POSTGRES_DB: $POSTGRES_DB
             # needed because the postgres container does not provide a healthcheck
             options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
@@ -42,5 +47,5 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
-      run: |
-        cd src && pytest
+      run: pytest
+      working-directory: ./src
