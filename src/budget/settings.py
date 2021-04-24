@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'budget.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['POSTGRES_DB'],
-        'USER': os.environ['POSTGRES_USER'],
-        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        'HOST':  os.environ.get('POSTGRES_HOST', default='db'),
-        'PORT':  os.environ.get('POSTGRES_PORT', default='5432'),
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST', default='db'),
+        'PORT': os.getenv('POSTGRES_PORT', default='5432'),
     }
 }
 
