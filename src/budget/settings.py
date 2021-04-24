@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-i)v#asu+*h4kvo%0s17$#gymbph)o*l-&x&mj_fr%cr0f@-m0@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'tivix-budget-app.herokuapp.com']
 
 
 # Application definition
