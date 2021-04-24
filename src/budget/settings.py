@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i)v#asu+*h4kvo%0s17$#gymbph)o*l-&x&mj_fr%cr0f@-m0@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', False),
 
 ALLOWED_HOSTS = ['127.0.0.1', 'tivix-budget-app.herokuapp.com']
 
