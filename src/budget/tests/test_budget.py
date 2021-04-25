@@ -5,8 +5,8 @@ from budget.models import Budget, BudgetEntry, BudgetEntryCategory
 
 
 @pytest.mark.django_db
-def test_budget_total():
-    budget = Budget(name="Family")
+def test_budget_total(admin_user):
+    budget = Budget(name="Family", owner=admin_user)
     budget.save()
 
     entries = BudgetEntry.objects.bulk_create([
