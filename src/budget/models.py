@@ -1,11 +1,29 @@
-import datetime
 from decimal import Decimal
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
-class Budget(models.Model):
+class BaseModel(models.Model):
+    """
+    Abstract base model.
+    """
+    created = models.DateTimeField(verbose_name='Created', auto_now_add=True)
+    updated = models.DateTimeField(verbose_name='Updated', auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Budget(BaseModel):
+    """
+    Holds information about income and expenses
+    """
+
     name = models.CharField(max_length=255)
+    owner = models.ForeignKey(
+        User, related_name='budgets', verbose_name='Owner', on_delete=models.CASCADE)
+    shared_with_users = models.ManyToManyField(User)
 
     def total(self) -> Decimal:
         """
@@ -14,12 +32,14 @@ class Budget(models.Model):
         entries = self.budget_entries.all()
         return sum([entry.amount for entry in entries])
 
-
     def __str__(self):
         return self.name
 
 
-class BudgetEntryCategory(models.Model):
+class BudgetEntryCategory(BaseModel):
+    """
+    Category of income or expense
+    """
     name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -29,11 +49,15 @@ class BudgetEntryCategory(models.Model):
         verbose_name_plural = "budget entry categories"
 
 
-class BudgetEntry(models.Model):
+class BudgetEntry(BaseModel):
+    """
+    The component that makes up the budget
+    """
     budget = models.ForeignKey(
         Budget, related_name='budget_entries', verbose_name='Budget', on_delete=models.CASCADE)
     category = models.ForeignKey(
-        BudgetEntryCategory, related_name='budget_entries', verbose_name='Category', on_delete=models.SET_NULL, null=True, blank=True)
+        BudgetEntryCategory, related_name='budget_entries', verbose_name='Category',
+        on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name='Amount')
 
