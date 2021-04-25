@@ -23,6 +23,7 @@ class Budget(BaseModel):
     name = models.CharField(max_length=255)
     owner = models.ForeignKey(
         User, related_name='budgets', verbose_name='Owner', on_delete=models.CASCADE)
+    shared_with_users = models.ManyToManyField(User)
 
     def total(self) -> Decimal:
         """
