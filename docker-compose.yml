@@ -13,9 +13,15 @@ services:
       - "5432:5432"
 
   web:
-    build: ./docker/web
+    build: .
     command: python /code/manage.py runserver 0.0.0.0:8000
     restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      DJANGO_SECRET: "e*%@z32%1un+=4kce2fbxl%0fd^852q@gyv$g=+!a!a!-fdl$s"
+      DJANGO_DEBUG: 'True'
     volumes:
       - "./src:/code"
     ports:
