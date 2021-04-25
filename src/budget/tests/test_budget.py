@@ -1,7 +1,8 @@
 from decimal import Decimal
+
 import pytest
 
-from budget.models import Budget, BudgetEntry, BudgetEntryCategory
+from budget.models import Budget, BudgetEntry
 
 
 @pytest.mark.django_db
