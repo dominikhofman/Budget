@@ -1,5 +1,7 @@
-import graphene
+from django.contrib.auth.models import User
 from graphene_django import DjangoObjectType
+import graphene
+
 from .models import Budget, BudgetEntryCategory, BudgetEntry
 
 
@@ -49,4 +51,94 @@ class Query(graphene.ObjectType):
         return BudgetEntryCategory.objects.all()
 
 
-schema = graphene.Schema(query=Query)
+class CreateBudget(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        shared_with_users = graphene.List(graphene.ID)
+
+    budget = graphene.Field(BudgetType)
+
+    def mutate(self, info, name, shared_with_users=None):
+        user = info.context.user
+
+        budget = Budget.objects.create(
+            name=name,
+            owner=user,
+        )
+
+        if shared_with_users is not None:
+            shared_with_users_set = []
+            for user_id in shared_with_users:
+                user_object = User.objects.get(pk=user_id)
+                shared_with_users_set.append(user_object)
+            budget.shared_with_users.set(shared_with_users_set)
+
+        budget.save()
+
+        return CreateBudget(
+            budget=budget
+        )
+
+
+class UpdateBudget(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID(required=True)
+        name = graphene.String()
+        shared_with_users = graphene.List(graphene.ID)
+
+    budget = graphene.Field(BudgetType)
+
+    def mutate(self, info, id, name=None, shared_with_users=None):
+        try:
+            budget = Budget.objects.get(pk=id)
+        except Budget.DoesNotExist:
+            return None
+
+        user = info.context.user
+        if budget.owner != user:
+            return None
+
+        budget.name = name if name is not None else budget.name
+
+        if shared_with_users is not None:
+            shared_with_users_set = []
+            for user_id in shared_with_users:
+                user_object = User.objects.get(pk=user_id)
+                shared_with_users_set.append(user_object)
+            budget.shared_with_users.set(shared_with_users_set)
+
+        budget.save()
+
+        return UpdateBudget(
+            budget=budget
+        )
+
+
+class DeleteBudget(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID(required=True)
+
+    budget = graphene.Field(BudgetType)
+
+    def mutate(self, info, id):
+        try:
+            budget = Budget.objects.get(pk=id)
+        except Budget.DoesNotExist:
+            return None
+
+        user = info.context.user
+        if budget.owner != user:
+            return None
+
+        budget.delete()
+
+        return DeleteBudget(budget=budget)
+
+
+class Mutation(graphene.ObjectType):
+    create_budget = CreateBudget.Field()
+    update_budget = UpdateBudget.Field()
+    delete_budget = DeleteBudget.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
