@@ -2,3 +2,4 @@ Django==3.2
 psycopg2
 pytest-django
 gunicorn
+graphene-django
