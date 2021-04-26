@@ -30,7 +30,7 @@ class Budget(BaseModel):
         return sum of associated entries
         """
         entries = self.budget_entries.all()
-        return sum([entry.amount for entry in entries])
+        return Decimal(sum([entry.amount for entry in entries]))
 
     def __str__(self):
         return self.name

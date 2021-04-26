@@ -18,4 +18,16 @@ def test_budget_total(admin_user):
     for entry in entries:
         entry.save()
 
-    assert budget.total() == Decimal('95.22')
+    result = budget.total()
+    assert isinstance(result, Decimal)
+    assert result == Decimal('95.22')
+
+
+@pytest.mark.django_db
+def test_budget_total_with_no_budget_entries(admin_user):
+    budget = Budget(name="Family", owner=admin_user)
+    budget.save()
+
+    result = budget.total()
+    assert isinstance(result, Decimal)
+    assert result == Decimal('0')
