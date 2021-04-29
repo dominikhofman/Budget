@@ -26,6 +26,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET', default=None),
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.getenv('DJANGO_DEBUG', False)),
 
+# TODO: extract to env variables
 ALLOWED_HOSTS = ['127.0.0.1', 'tivix-budget-app.herokuapp.com']
 
 

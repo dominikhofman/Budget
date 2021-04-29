@@ -21,6 +21,10 @@ class BudgetEntryType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    # TODO: add pagination https://graphql.org/learn/pagination/
+    # TODO: add endpoints for fetching single object by id
+    # TODO: rename endpoints to something like 'budgets' for lists 
+    #       and 'budget' for single object
     all_budgets = graphene.List(BudgetType)
     all_shared_budgets = graphene.List(BudgetType)
     all_budget_entry_categories = graphene.List(BudgetEntryCategoryType)
@@ -33,6 +37,7 @@ class Query(graphene.ObjectType):
         except Budget.DoesNotExist:
             return None
 
+        # TODO: Move checking permissions to buissnes logic
         user = info.context.user
         if budget.owner != user and not budget.shared_with_users.filter(pk=user.pk).exists():
             return None
@@ -136,6 +141,8 @@ class DeleteBudget(graphene.Mutation):
 
 
 class Mutation(graphene.ObjectType):
+    # TODO: create CRUD for budget entry
+    # TODO: create mutation 'share_budget_with'
     create_budget = CreateBudget.Field()
     update_budget = UpdateBudget.Field()
     delete_budget = DeleteBudget.Field()

@@ -54,6 +54,8 @@ class BudgetEntry(BaseModel):
     """
     The component that makes up the budget
     """
+    # TODO: add name/title field
+
     budget = models.ForeignKey(
         Budget, related_name='budget_entries', verbose_name='Budget', on_delete=models.CASCADE)
     category = models.ForeignKey(

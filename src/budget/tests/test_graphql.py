@@ -38,7 +38,8 @@ def test_all_budgets_query(user1_client):
         }
         ''',
         client=user1_client,
-        graphql_url='/graph'
+        # TODO: use something linke djangos 'reverse()' instead of hardcoding endpoint url
+        graphql_url='/graph' 
     )
 
     content = json.loads(response.content)
